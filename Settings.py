@@ -1,2 +1,5 @@
-Width=1440
-Height=720
+GAME_NAME = "Minesweeper"
+WIDTH = 1440
+HEIGHT = 720
+GRID_LENGTH = 10
+GRID_HEIGHT = 6
