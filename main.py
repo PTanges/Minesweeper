@@ -21,20 +21,19 @@ LFrame.place(x=0, y=Util.HeightPercentage(25))
 CFrame = Frame(root, bg="white", width=Util.WidthPercentage(75), height=Util.HeightPercentage(75))
 CFrame.place(x=Util.WidthPercentage(25), y=Util.HeightPercentage(25))
 
-'''
-c1 = Cell()
-c1.createCell(CFrame)
-c1.Cell.grid(column=0, row=0)
-
-c2 = Cell()
-c2.createCell(CFrame)
-c2.Cell.grid(column=0, row=1)
-'''
-
 for x in range(Settings.GRID_LENGTH):
     for y in range(Settings.GRID_HEIGHT):
-        c = Cell()
+        c = Cell(x, y)
         c.createCell(CFrame)
         c.Cell.grid(column=x, row=y)
+
+Cell.randomizeMines()
+
+# Debug
+print(Cell.map)
+bombMap = []
+for cellBox in Cell.map:
+    bombMap.append(cellBox._isMine)
+print(bombMap)
 
 root.mainloop()
