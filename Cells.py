@@ -1,10 +1,11 @@
-from tkinter import Button
+from tkinter import Button, Label
 import random
 import Settings
 
 class Cell:
     # Cache
     map = []
+    cellCount = None
     def __init__(self, x, y, isMine = False):
         self._x = x
         self._y = y
@@ -16,26 +17,71 @@ class Cell:
     def createCell(self, location):
         button = Button(location, width=12, height=4)
         button.bind('<Button-1>', self.leftClickEvent)
-        button.bind('<Button-3>', self.rightClickEvent)
+        button.bind('<Button-3>', self.rightClickEvent) # May be configured differently based on mouse specs
         self._Cell = button
 
+    @staticmethod
+    def createCellCountTrackerLabel(location):
+        label = Label(location,
+                      text=f"Cells Left: {Settings.CELL_COUNT}",
+                      width=12, height=4,
+                      bg="black", fg="white"
+        )
+        Cell.cellCount = label
+
     def leftClickEvent(self, event):
-        if self._isMine:
+        if self._Cell["bg"] == "Orange":
+            return
+        if self._isMine and self._Cell["bg"] != "Green":
             self.revealMine()
+            self.cellCount.configure(fg="Red")
         else:
-            self.revealCell()
+            if self.adjacentMineQuantity == 0:
+                self.revealAdjacentCells()
+            else:
+                self.revealCell()
+        self.updateCellTracker()
+
+    def updateCellTracker(self):
+        shownCellCount = 0
+        cellLocation = []
+        for cell in self.map:
+            if cell._Cell["text"] == None or cell._Cell["text"] == "":
+                shownCellCount+=1
+                cellLocation.append(cell)
+        self.cellCount.configure(text=f'Cells left: {shownCellCount}')
+
+        if shownCellCount == Settings.MINE_QUANTITY and self.cellCount["fg"] != "Red":
+            self.cellCount.configure(fg="Green")
+            for local in cellLocation:
+                local._Cell.configure(bg="Green")
 
 
     def rightClickEvent(self, event):
-        print(event)
+        if self._Cell["bg"] == "Orange":
+            self.changeCellColour("SystemButtonFace") # Default
+        elif self._Cell["bg"] == "SystemButtonFace" and (self._Cell["text"] == None or self._Cell["text"] == ""):
+            self.changeCellColour("Orange")
+
+
+    def revealAdjacentCells(self):
+        self.revealCell()
+        for cell in self.adjacentCells:
+            cell.revealCell()
 
     def revealMine(self):
         self.changeCellColour("Red")
-        print(f'Boom! You hit a bomb at {self.getCellCoordinates(self._x, self._y)}')
 
     def revealCell(self):
         self._Cell.configure(text=self.adjacentMineQuantity)
-        print(f'Nearby Bombs: {self.adjacentMineQuantity}')
+
+    @property
+    def adjacentMineQuantity(self):
+        mineCounter = 0
+        for cell in self.adjacentCells:
+            if cell.isMine:
+                mineCounter += 1
+        return mineCounter
 
     @property
     def adjacentCells(self):
@@ -56,15 +102,6 @@ class Cell:
         ]
         adjacentCells = [cell for cell in adjacentCells if cell is not None]
         return adjacentCells
-
-    # No need for the "get" keyword due to @property class decorator, call like a variable name
-    @property
-    def adjacentMineQuantity(self):
-        mineCounter = 0
-        for cell in self.adjacentCells:
-            if cell.isMine:
-                mineCounter += 1
-        return mineCounter
 
     def getCellCoordinates(self, x, y):
         for cell in self.map:
@@ -88,7 +125,3 @@ class Cell:
         mineCellList = random.sample(Cell.map, Settings.MINE_QUANTITY)
         for cellBox in mineCellList:
             cellBox._isMine = True
-
-    # Debug
-    def __repr__(self):
-        return f'Cell({self._x},{self._y})'

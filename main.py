@@ -17,6 +17,8 @@ TFrame.place(x=0, y=0)
 
 LFrame = Frame(root, bg="black", width=Util.WidthPercentage(25), height=Util.HeightPercentage(75))
 LFrame.place(x=0, y=Util.HeightPercentage(25))
+Cell.createCellCountTrackerLabel(LFrame)
+Cell.cellCount.place(x=0,y=0)
 
 CFrame = Frame(root, bg="white", width=Util.WidthPercentage(75), height=Util.HeightPercentage(75))
 CFrame.place(x=Util.WidthPercentage(25), y=Util.HeightPercentage(25))
@@ -28,13 +30,5 @@ for x in range(Settings.GRID_LENGTH):
         c.Cell.grid(column=x, row=y)
 
 Cell.randomizeMines()
-
-# Debug
-print(f'Cell Coords: {Cell.map}')
-bombMap = []
-for cell in Cell.map:
-    if cell.isMine:
-        bombMap.append(cell)
-print(f'Bombs: {bombMap}')
 
 root.mainloop()
