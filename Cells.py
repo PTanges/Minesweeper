@@ -1,6 +1,8 @@
 from tkinter import Button, Label
 import random
 import Settings
+import ctypes  # tkinter messagebox requires drawing new window
+import sys
 
 class Cell:
     # Cache
@@ -35,6 +37,8 @@ class Cell:
         if self._isMine and self._Cell["bg"] != "Green":
             self.revealMine()
             self.cellCount.configure(fg="Red")
+            ctypes.windll.user32.MessageBoxW(0, "Boom! You blew up a mine", "Game Over!", 0)
+            sys.exit()
         else:
             if self.adjacentMineQuantity == 0:
                 self.revealAdjacentCells()
@@ -55,6 +59,7 @@ class Cell:
             self.cellCount.configure(fg="Green")
             for local in cellLocation:
                 local._Cell.configure(bg="Green")
+            ctypes.windll.user32.MessageBoxW(0, "You win! You've found all the mines!", "Winner!", 0)
 
 
     def rightClickEvent(self, event):
