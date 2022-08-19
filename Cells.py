@@ -34,6 +34,7 @@ class Cell:
         print(f'Boom! You hit a bomb at {self.getCellCoordinates(self._x, self._y)}')
 
     def revealCell(self):
+        self._Cell.configure(text=self.adjacentMineQuantity)
         print(f'Nearby Bombs: {self.adjacentMineQuantity}')
 
     @property
