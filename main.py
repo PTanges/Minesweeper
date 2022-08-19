@@ -1,5 +1,5 @@
 from tkinter import *
-from Cell import Cell
+from Cells import Cell
 import Settings
 import Util
 # from Minesweeper import Minesweeper
@@ -30,10 +30,11 @@ for x in range(Settings.GRID_LENGTH):
 Cell.randomizeMines()
 
 # Debug
-print(Cell.map)
+print(f'Cell Coords: {Cell.map}')
 bombMap = []
-for cellBox in Cell.map:
-    bombMap.append(cellBox._isMine)
-print(bombMap)
+for cell in Cell.map:
+    if cell.isMine:
+        bombMap.append(cell)
+print(f'Bombs: {bombMap}')
 
 root.mainloop()
