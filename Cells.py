@@ -5,7 +5,6 @@ import ctypes  # tkinter messagebox requires drawing new window
 import sys
 
 class Cell:
-    # Cache
     map = []
     cellCount = None
     def __init__(self, x, y, isMine = False):

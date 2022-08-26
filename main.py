@@ -2,12 +2,11 @@ from tkinter import *
 from Cells import Cell
 import Settings
 import Util
-# from Minesweeper import Minesweeper
 
+# Draw Game
 root = Tk()
 root.configure(bg="black")
 
-# width x height
 root.geometry(f'{Settings.WIDTH}x{Settings.HEIGHT}')
 root.title(Settings.GAME_NAME)
 root.resizable(False, False)
